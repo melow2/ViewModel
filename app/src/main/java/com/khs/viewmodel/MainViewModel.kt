@@ -2,10 +2,14 @@ package com.khs.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LifecycleObserver
 
-public class MainViewModel(application: Application) : AndroidViewModel(application) {
-    private var testCount:Int = 0
+
+class MainViewModel(application: Application, startCount: Int) : AndroidViewModel(application) {
+    private var testCount: Int = 0
+
+    init {
+        testCount = startCount
+    }
 
     fun getCurrentCount(): Int {
         return testCount

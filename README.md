@@ -17,4 +17,55 @@ From the moment an app launches an activity to the moment it appears on the scre
 Create state, start state and resume state. Activity has to pass pause, stop and destroy states before it ends. ViewModel scope start with the invocation of the onCreate method. 
 It ends when the activity removed form the memory.During that period activity can recreate again and again , but view model instance will live in the memory holding activity's data. 
 ```
+#
+## Implementation
+* MainActivity
+```
+class MainActivity : AppCompatActivity() {
 
+    lateinit var mBinding:ActivityMainBinding
+    lateinit var mainVM:MainViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        mBinding = DataBindingUtil.setContentView(this,R.layout.activity_main)
+        mainVM = ViewModelProvider(this,MainViewModelFactory(application,100)).get(MainViewModel::class.java)
+        mBinding.apply {
+            tvCount.text = mainVM.getCurrentCount().toString()
+            btnCount.setOnClickListener {
+                tvCount.text = mainVM.getUpdateCount().toString()
+            }
+        }
+    }
+}
+```
+
+* MainViewModel
+```
+class MainViewModel(application: Application, startCount: Int) : AndroidViewModel(application) {
+    private var testCount: Int = 0
+
+    init {
+        testCount = startCount
+    }
+
+    fun getCurrentCount(): Int {
+        return testCount
+    }
+
+    fun getUpdateCount(): Int {
+        return ++testCount
+    }
+}
+```
+
+* MainViewModelFactory
+```
+class MainViewModelFactory(private val mApplication: Application, private val startCount: Int) :
+    ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return MainViewModel(mApplication, startCount) as T
+    }
+}
+```

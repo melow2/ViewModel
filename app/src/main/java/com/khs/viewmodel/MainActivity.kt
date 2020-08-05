@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mBinding = DataBindingUtil.setContentView(this,R.layout.activity_main)
-        mainVM = ViewModelProvider(this).get(MainViewModel::class.java)
+        mainVM = ViewModelProvider(this,MainViewModelFactory(application,100)).get(MainViewModel::class.java)
         mBinding.apply {
             tvCount.text = mainVM.getCurrentCount().toString()
             btnCount.setOnClickListener {
